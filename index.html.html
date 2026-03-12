@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Letter For You</title>
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg,#ffd6e7,#ffeef5);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* floating hearts */
+.heart {
+  position: absolute;
+  color: #ff6fa5;
+  font-size: 20px;
+  animation: float 6s linear infinite;
+  opacity: 0.6;
+}
+@keyframes float {
+  0% { transform: translateY(100vh) scale(0.5); }
+  100% { transform: translateY(-10vh) scale(1); }
+}
+
+/* Page container */
+.container {
+  text-align: center;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+  animation: fadeIn 1s;
+  max-width: 90%;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 30px;
+  background: #ff6fa5;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button:hover {
+  background: #ff4f8c;
+  transform: scale(1.05);
+}
+
+/* Envelope card */
+#envelopePage {
+  display: none;
+}
+
+.envelope-card {
+  position: relative;
+  width: 260px;
+  height: 170px;
+  margin: auto;
+  cursor: pointer;
+  border-radius: 10px;
+  transition: transform 0.4s;
+  overflow: hidden; /* clip paper until opened */
+}
+
+/* Front rectangle (Layer 1) */
+.envelope-front {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ff8fb8;
+  border-radius: 10px;
+  z-index: 3; /* hides paper */
+  transition: opacity 0.5s ease;
+}
+
+/* Paper (Layer 2) */
+.paper {
+  position: absolute;
+  width: 240px;
+  height: 160px;
+  background: #fffdf5; /* soft paper color */
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%) translateY(100%);
+  border-radius: 12px;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.5;
+  z-index: 2; /* between front and flap */
+  display: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15); /* subtle shadow */
+  border: 1px solid #f1e8d9;
+  font-family: 'Georgia', serif; /* elegant letter feel */
+}
+
+/* Flap (Layer 3) */
+.flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-left: 130px solid transparent;
+  border-right: 130px solid transparent;
+  border-top: 90px solid #ff6fa5;
+  transform-origin: top center;
+  transition: transform 0.8s ease;
+  z-index: 4; /* topmost */
+}
+
+/* Animation: paper pulled out */
+@keyframes paperPullOut {
+  0% { transform: translateX(-50%) translateY(100%) scale(0.8); opacity: 0; }
+  30% { transform: translateX(-50%) translateY(50%) scale(0.9); opacity: 0.5; }
+  100% { transform: translateX(-50%) translateY(-220px) scale(1); opacity: 1; }
+}
+
+.open .flap {
+  transform: rotateX(-180deg);
+}
+.open .paper {
+  display: block;
+  animation: paperPullOut 1.2s forwards ease-out;
+}
+.open .envelope-front {
+  opacity: 0; /* front cover fades away */
+}
+
+/* Final letter page */
+#letterPage {
+  display: none;
+  max-width: 1000px;
+  background: #fffdf5; /* soft paper color */
+  padding: 35px 40px;
+  border-radius: 15px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+  text-align: left;
+  line-height: 1.6;
+  font-family: 'Georgia', serif;
+  font-size: 16px;
+  color: #333;
+  border: 1px solid #f1e8d9;
+  animation: fadeIn 1s;
+}
+</style>
+</head>
+<body>
+
+<!-- floating hearts -->
+<script>
+for (let i = 0; i < 25; i++) {
+  let heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = ["❤","💖","💕","💓"][Math.floor(Math.random()*4)];
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = (16 + Math.random()*12) + "px";
+  heart.style.animationDuration = (4 + Math.random()*4) + "s";
+  document.body.appendChild(heart);
+}
+</script>
+
+<!-- Start page -->
+<div class="container" id="start">
+  <h2>I made something for you 😊</h2>
+  <p>Do you want to read my letter?</p>
+  <button onclick="showEnvelope()">Yes 💌</button>
+</div>
+
+<!-- Envelope page -->
+<div class="container" id="envelopePage">
+  <h3>Click the envelope</h3>
+  <div class="envelope-card" id="env" onclick="openEnvelope()" aria-label="Click to open letter">
+    <div class="paper">A letter for you ❤️</div>
+    <div class="envelope-front"></div>
+    <div class="flap"></div>
+  </div>
+</div>
+
+<!-- Letter page -->
+<div class="container" id="letterPage">
+  <h2>For You</h2>
+  <p>
+    Hi Reu, I made this letter because I want to be honest about what I feel. For some time now, I’ve realized that I really like you. Sometimes I even find myself waiting for a notification from you, and when I don’t see one, I start wondering why I feel that way.<br> That’s when I understood that you’ve become someone important to me.
+
+I know we met on the dating app Litmatch, and maybe for some people it’s just a simple place to meet strangers. But for me, meeting you there became something special.<br> I’m really, really happy that I met you. Out of all the random conversations and people online, I didn’t expect to find someone like you who would make me feel this way.<br>
+
+But even though I feel this way, I don’t want to rush anything or make things happen too fast.<br> I believe that the best things take time, and I would rather get to know you little by little. I want to understand who you are, the things you love, the things that make you happy, and the dreams you’re working hard for.
+
+I also know that you are the type of person who is focused on your studies and your goals, and I really respect that about you.<br> Honestly, that’s one of the reasons I admire you. Your dedication and the way you carry yourself make me respect you even more.<br>
+
+I’m not asking you for anything right now. I just want you to know how I truly feel. If time allows it, I’m willing to wait and see where things could go. And if you are the person meant for me, then I believe time will naturally lead us there.<br>
+
+Whatever your response may be, I will respect and accept it with understanding. I just wanted to take this step and be honest, because keeping these feelings to myself didn’t feel right anymore.
+
+Please don’t feel pressured by this message. I just wanted to express what’s in my heart.
+  </p>
+</div>
+
+<!-- Audio outside hidden containers -->
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mp3">
+</audio>
+
+<script>
+function showEnvelope() {
+  document.getElementById("start").style.display = "none";
+  document.getElementById("envelopePage").style.display = "block";
+}
+
+function openEnvelope() {
+  let env = document.getElementById("env");
+  env.classList.add("open");
+
+  // Play music after user clicked
+  let music = document.getElementById("bgMusic");
+  music.play().catch(e => console.log("Autoplay blocked:", e));
+
+  setTimeout(function() {
+    document.getElementById("envelopePage").style.display = "none";
+    document.getElementById("letterPage").style.display = "block";
+  }, 1600); // wait until paper finishes sliding out
+}
+</script>
+
+</body>
+</html>
